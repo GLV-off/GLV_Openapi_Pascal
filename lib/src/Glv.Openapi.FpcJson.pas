@@ -8,6 +8,14 @@ uses
   Glv.Openapi.Ifaces;
 
 type
+  TJsonOpenapiDocument = class(TInterfacedObject, IOpenapiDocument)
+  private
+    FOrigin: IOpenapiDocument;
+  public
+    constructor Create(const AOrigin: IOpenapiDocument);
+    destructor Destroy; override;
+  end;
+
   TJsonPath = class(TInterfacedObject, IPath)
   public
   end;
