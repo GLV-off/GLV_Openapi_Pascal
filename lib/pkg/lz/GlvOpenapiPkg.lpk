@@ -35,6 +35,10 @@
         <Filename Value="..\..\src\Glv.Openapi.Version.pas"/>
         <UnitName Value="Glv.Openapi.Version"/>
       </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.FpcJson.pas"/>
+        <UnitName Value="Glv.Openapi.FpcJson"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>
