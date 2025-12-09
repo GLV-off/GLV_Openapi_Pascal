@@ -1,0 +1,14 @@
+# Output
+out
+
+# FPC \ Lazarus \ Code Typhon
+backup
+*.ppu
+
+# Delphi
+__recovery
+__history
+*.local
+*.identcache
+*.dcu
+*.dcp

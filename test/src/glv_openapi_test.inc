@@ -1,0 +1,4 @@
+{$IFDEF FPC}
+{$MODE DELPHI}{$H+}{$M+}
+{$ENDIF FPC}
+

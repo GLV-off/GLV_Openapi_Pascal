@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="GlvOpenapiPkg"/>
+    <Type Value="RunAndDesignTime"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <IncludeFiles Value="..\..\src"/>
+        <OtherUnitFiles Value="..\..\src"/>
+        <UnitOutputDirectory Value="..\..\out\$(TargetCPU)-$(TargetOS)\"/>
+      </SearchPaths>
+      <CodeGeneration>
+        <Optimizations>
+          <OptimizationLevel Value="0"/>
+        </Optimizations>
+      </CodeGeneration>
+    </CompilerOptions>
+    <Files>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.pas"/>
+        <UnitName Value="Glv.Openapi"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.Ifaces.pas"/>
+        <UnitName Value="Glv.Openapi.Ifaces"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.Json.pas"/>
+        <UnitName Value="Glv.Openapi.Json"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.Version.pas"/>
+        <UnitName Value="Glv.Openapi.Version"/>
+      </Item>
+    </Files>
+    <RequiredPkgs>
+      <Item>
+        <PackageName Value="FCL"/>
+      </Item>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+      <UseFileFilters Value="True"/>
+    </PublishOptions>
+  </Package>
+</CONFIG>
