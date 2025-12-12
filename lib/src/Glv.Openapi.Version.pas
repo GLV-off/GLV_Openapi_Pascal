@@ -5,6 +5,8 @@ unit Glv.Openapi.Version;
 interface
 
 type
+  {
+  }
   TOpenapiVersion = record
     Version: UnicodeString;
     constructor Create(const AValue: UnicodeString);
