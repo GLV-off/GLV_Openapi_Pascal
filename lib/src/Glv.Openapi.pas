@@ -1,4 +1,4 @@
-unit Glv.Openapi;
+﻿unit Glv.Openapi;
 
 {$I 'glv_openapi_lib.inc'}
 

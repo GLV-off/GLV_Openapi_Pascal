@@ -1,4 +1,4 @@
-unit Glv.Openapi.DelphiJson;
+﻿unit Glv.Openapi.DelphiJson;
 
 {$I 'glv_openapi_lib.inc'}
 

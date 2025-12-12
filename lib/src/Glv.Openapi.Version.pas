@@ -1,4 +1,4 @@
-unit Glv.Openapi.Version;
+﻿unit Glv.Openapi.Version;
 
 {$I 'glv_openapi_lib.inc'}
 

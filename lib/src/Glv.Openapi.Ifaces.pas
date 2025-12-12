@@ -1,11 +1,12 @@
-unit Glv.Openapi.Ifaces;
+﻿unit Glv.Openapi.Ifaces;
 
 {$I 'glv_openapi_lib.inc'}
 
 interface
 
 uses
-  Glv.Openapi.Version;
+  Glv.Openapi.Version,
+  Glv.Openapi.Server;
 
 type
   IInfo = interface;
@@ -29,8 +30,13 @@ type
   end;
 
   IInfo = interface
-    function GetSummary: UnicodeString;
-    property Summary: UnicodeString read GetSummary;
+    function GetTitle: UnicodeString;
+    function GetDescription: UnicodeString;
+    function GetVersion: UnicodeString;
+
+    property Title: UnicodeString read GetTitle;
+    property Description: UnicodeString read GetDescription;
+    property Version: UnicodeString read GetVersion;
   end;
 
   IPaths = interface
@@ -40,6 +46,11 @@ type
   end;
 
   IServers = interface
+    function GetCount: Integer;
+    function GetServer(const AIdx: Integer): TOpenapiServer;
+
+    property Server[const AIdx: Integer]: TOpenapiServer read GetServer;
+    property Count: Integer read GetCount;
   end;
 
   IComponents = interface
