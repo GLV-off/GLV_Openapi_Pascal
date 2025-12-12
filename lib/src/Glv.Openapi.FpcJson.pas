@@ -30,6 +30,9 @@ type
     destructor Destroy; override;
   end;
 
+  {
+
+  }
   TJsonInfo = class(TBaseInfo)
   strict private
     FJson: TJSONObject;
@@ -42,13 +45,17 @@ type
     destructor Destroy; override;
   end;
 
+  {
+
+  }
   TJsonServers = class(TBaseServers)
   strict protected
     FJson: TJSONArray;
     function GetCount: Integer; override;
     function GetServer(const AIdx: Integer): TOpenapiServer; override;
   public
-    constructor Create(const AJson: TJSONArray);
+    constructor Create(const AJson: TJSONArray); overload;
+    constructor Create; overload;
     destructor Destroy; override;
   end;
 
@@ -98,8 +105,13 @@ begin
 end;
 
 function TJsonOpenapiDocument.GetServers: IServers;
+var
+  TmpJson: TJSONArray;
 begin
-  Result := nil;
+  if FJson.Find('servers', TmpJson) then
+    Result := TJsonServers.Create(TJSONArray(TmpJson.Clone))
+  else
+    Result := TJsonServers.Create();
 end;
 
 function TJsonOpenapiDocument.GetPaths: IPaths;
@@ -150,13 +162,24 @@ end;
 
 function TJsonServers.GetServer(const AIdx: Integer): TOpenapiServer;
 var
-  Item: TJsonData;
+  Item: TJSONData;
+  Tmp: TJSONString;
+  Obj: TJSONObject;
 begin
   if (AIdx >= 0) and (AIdx < FJson.Count) then
   begin
     Item := FJson[AIdx];
-    Result := TOpenapiServer.Create();
-    //Result.Url:='';
+    if Item.InheritsFrom(TJSONObject) then
+    begin
+      Obj := TJSONObject(Item);
+      Result := TOpenapiServer.Create();
+      if Obj.Find('url', Tmp) then
+        Result.Url := Tmp.Value;
+      if Obj.Find('description', Tmp) then
+        Result.Description := Tmp.Value;
+    end
+    else
+      Result := TOpenapiServer.Create();
   end
   else
   begin
@@ -168,6 +191,11 @@ constructor TJsonServers.Create(const AJson: TJSONArray);
 begin
   inherited Create;
   FJson := AJson;
+end;
+
+constructor TJsonServers.Create;
+begin
+  Self.Create(TJSONArray.Create());
 end;
 
 destructor TJsonServers.Destroy;

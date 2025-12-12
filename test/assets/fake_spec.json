@@ -4,5 +4,11 @@
     "title": "Тестовый ассет спецификации Open API",
     "description": "Тестовый ассет и его описание",
     "version": "1.2.3"
-  }
+  },
+  "servers": [
+    {
+      "url": "http://localhost/test",
+      "description": "Тестовый сервер"
+    }
+  ]
 }

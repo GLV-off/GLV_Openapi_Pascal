@@ -29,6 +29,8 @@ type
     procedure TestVersion;
     procedure TestInfoNotNull;
     procedure TestInfo;
+    procedure TestServersNotNil;
+    procedure TestServers;
   end;
 
   TDefaultJsonInfoTest = class(TCrossTestCase)
@@ -50,6 +52,7 @@ uses
   jsonparser,
   Glv.Openapi.FpcJson,
   Glv.Openapi.Version,
+  Glv.Openapi.Server,
   Test.Env,
   Test.Fakes;
 
@@ -131,6 +134,30 @@ begin
   CheckEquals(TEST_INFO_TITLE, Info.Title, UTF8Encode('info.title Не соответствует!'));
   CheckEquals(TEST_INFO_DESC, Info.Description, UTF8Encode('info.description Не соответствует!'));
   CheckEquals(TEST_INFO_VERSION, Info.Version, UTF8Encode('info.version Не соответствует!'));
+end;
+
+procedure TDefaultJsonOpenapiDocumentTest.TestServersNotNil;
+var
+  Servers: IServers;
+begin
+  Servers := FOpenapi.Servers;
+  CheckNotNull(Servers, 'servers не нуль');
+end;
+
+procedure TDefaultJsonOpenapiDocumentTest.TestServers;
+var
+  Servers: IServers;
+  Server: TOpenapiServer;
+begin
+  Servers := FOpenapi.Servers;
+  CheckEquals(1, Servers.Count, 'Число элементов не соответствует!');
+  Server := Servers.Server[0];
+  try
+    CheckEquals('http://localhost/test', Server.Url);
+    CheckEquals('Тестовый сервер', Server.Description);
+  finally
+    FreeAndNil(Server);
+  end;
 end;
 
 { ==== TDefaultJsonInfoTest ================================================= }

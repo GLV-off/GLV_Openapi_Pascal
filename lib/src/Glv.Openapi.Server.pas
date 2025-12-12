@@ -25,7 +25,7 @@ type
     destructor Destroy; override;
     property Url: UnicodeString read FUrl write FUrl;
     property Variables: TOpenapiVariables read FVariables;
-    property Description: UnicodeString read FDescription;
+    property Description: UnicodeString read FDescription write FDescription;
   end;
 
 implementation
