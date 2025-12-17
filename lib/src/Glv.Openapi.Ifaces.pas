@@ -16,6 +16,7 @@ type
   IPaths = interface;
   IPath = interface;
   IComponents = interface;
+  ITags = interface;
 
   IOpenapiDocument = interface
     function GetOpenapi: TOpenapiVersion;
@@ -77,6 +78,13 @@ type
 
     property Server[const AIdx: Integer]: TOpenapiServer read GetServer;
     property Count: Integer read GetCount;
+  end;
+
+  ITags = interface
+    function GetTag(const AIdx: Integer): TOpenapiTag;
+
+    property Tag[const AIdx: Integer]: TOpenapiTag
+      read GetTag;
   end;
 
   IComponents = interface

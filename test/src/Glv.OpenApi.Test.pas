@@ -375,6 +375,7 @@ begin
   CheckEquals(TEST_INFO_TITLE, Info.Title, UTF8Encode('info.title Не соответствует!'));
   CheckEquals(TEST_INFO_DESC, Info.Description, UTF8Encode('info.description Не соответствует!'));
   CheckEquals(TEST_INFO_VERSION, Info.Version, UTF8Encode('info.version Не соответствует!'));
+
 end;
 
 procedure TDefaultJsonOpenapiDocumentTest.TestServersNotNil;

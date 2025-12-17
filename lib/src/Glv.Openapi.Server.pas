@@ -33,6 +33,27 @@ type
     property Description: UnicodeString read FDescription write FDescription;
   end;
 
+  {
+
+  }
+  TOpenapiTag = class(TInterfacedObject)
+  strict private
+    FName: UnicodeString;
+    FDescription: UnicodeString;
+    FExternalDocs: TOpenapiVariables;
+  public
+    constructor Create(
+      const AName: UnicodeString;
+      const ADescription: UnicodeString);
+    destructor Destroy; override;
+    property Name: UnicodeString
+             read FName
+             write FName;
+    property Description: UnicodeString
+             read FDescription
+             write FDescription;
+  end;
+
 implementation
 
 uses
@@ -70,6 +91,26 @@ begin
   FUrl:= '';
   FDescription:= '';
   FreeAndNil(FVariables);
+  inherited Destroy;
+end;
+
+{ ==== TOpenapiTag ========================================================== }
+
+constructor TOpenapiTag.Create(
+  const AName: UnicodeString;
+  const ADescription: UnicodeString);
+begin
+  inherited Create;
+  FName := AName;
+  FDescription := ADescription;
+  FExternalDocs := TOpenapiVariables.Create;
+end;
+
+destructor TOpenapiTag.Destroy;
+begin
+  FreeAndNil(FExternalDocs);
+  FName := '';
+  FDescription := '';
   inherited Destroy;
 end;
 
