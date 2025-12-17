@@ -3,12 +3,13 @@
 {$I 'glv_openapi_test.inc'}
 
 uses
+{$IFDEF WINDOWS}
   Windows,
+{$ENDIF WINDOWS}
   Glv.OpenApi.Test,
   Glv.Testing.App,
   Test.Env,
   Test.Fakes;
-
 begin
 {$IFDEF WINDOWS}
   SetConsoleCP(CP_UTF8);
