@@ -10,6 +10,10 @@ uses
   Glv.Openapi.Ifaces;
 
 type
+  {
+   Testing empty JSON openapi object
+   document representation.
+  }
   TEmptyJsonOpenapiDocumentTest = class(TCrossTestCase)
   protected
     FOpenapi: IOpenapiDocument;
@@ -19,6 +23,10 @@ type
     procedure TestVersionReturnNothing;
   end;
 
+  {
+   Tests for default preloaded FAKE asset
+   as Open API Json document
+  }
   TDefaultJsonServersTest = class(TCrossTestCase)
   protected
     FServers: IServers;
@@ -168,13 +176,16 @@ begin
 end;
 
 procedure TDefaultJsonServersTest.TestAccessServerObject;
+const
+  MSG_URL: string = 'fake_url';
+  MSG_DESC: string = 'fake_description';
 var
   S: TOpenapiServer;
 begin
   S := FServers.Server[0];
   try
-    CheckEquals('fake_url', UTF8Encode(S.Url), 'Поле url не соответствует ожиданию!');
-    CheckEquals('fake_description', UTF8Encode(S.Description), 'Поле description не соответствует ожиданию!');
+    CheckEquals(MSG_URL, UTF8Encode(S.Url), 'Поле url не соответствует ожиданию!');
+    CheckEquals(MSG_DESC, UTF8Encode(S.Description), 'Поле description не соответствует ожиданию!');
     { todo: glv: Проверить Variables }
   finally
     FreeAndNil(S);
@@ -472,12 +483,10 @@ var
   Itr: TBaseJSONEnumerator;
   En : TJSONEnum;
 begin
-  {
-  При получении интератора, хотябы раз
-  нужно вызвать MoveNext
-  }
+  { При получении интератора, хотябы раз
+    нужно вызвать MoveNext }
   Itr := FJSon.GetEnumerator();
-  Itr.MoveNext;
+  Itr.MoveNext();
   En := Itr.Current;
   CheckEquals(0, En.KeyNum, 'KeyNum not match!');
 end;

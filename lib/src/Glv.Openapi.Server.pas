@@ -11,6 +11,7 @@ type
   TOpenapiVariable = record
     Key: UnicodeString;
     Value: Variant;
+    constructor Create(const AKey: UnicodeString; const AValue: Variant);
   end;
 
   TOpenapiVariables = TDictionary<string, TOpenapiVariable>;
@@ -37,6 +38,17 @@ implementation
 uses
   SysUtils;
 
+{ ==== TOpenapiVariable ===================================================== }
+
+constructor TOpenapiVariable.Create(
+  const AKey: UnicodeString; const AValue: Variant);
+begin
+  Self.Key := AKey;
+  Self.Value := AValue;
+end;
+
+{ ==== TOpenapiServer ======================================================= }
+
 constructor TOpenapiServer.Create;
 begin
   Self.Create('', '', TOpenapiVariables.Create());
@@ -60,6 +72,8 @@ begin
   FreeAndNil(FVariables);
   inherited Destroy;
 end;
+
+{ =========================================================================== }
 
 end.
 

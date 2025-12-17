@@ -27,7 +27,7 @@
             <Filename Value="..\..\out\$(TargetCPU)-$(TargetOS)\release\test"/>
           </Target>
           <SearchPaths>
-            <IncludeFiles Value="$(ProjOutDir)"/>
+            <IncludeFiles Value="$(ProjOutDir);..\..\src"/>
             <OtherUnitFiles Value="..\..\src"/>
             <UnitOutputDirectory Value="..\..\out\$(TargetCPU)-$(TargetOS)\release"/>
           </SearchPaths>
