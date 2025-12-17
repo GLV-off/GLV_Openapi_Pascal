@@ -17,11 +17,15 @@ type
 
   TOpenapiServer = class
   strict private
-    FDescription: UnicodeString;
     FUrl: UnicodeString;
+    FDescription: UnicodeString;
     FVariables: TOpenapiVariables;
   public
-    constructor Create;
+    constructor Create(
+      const AUrl: UnicodeString;
+      const ADescription: UnicodeString;
+      const AVariables: TOpenapiVariables); overload;
+    constructor Create; overload;
     destructor Destroy; override;
     property Url: UnicodeString read FUrl write FUrl;
     property Variables: TOpenapiVariables read FVariables;
@@ -35,10 +39,18 @@ uses
 
 constructor TOpenapiServer.Create;
 begin
+  Self.Create('', '', TOpenapiVariables.Create());
+end;
+
+constructor TOpenapiServer.Create(
+  const AUrl: UnicodeString;
+  const ADescription: UnicodeString;
+  const AVariables: TOpenapiVariables);
+begin
   inherited Create;
-  FVariables := TOpenapiVariables.Create();
-  FDescription:= '';
-  FUrl:= '';
+  FUrl := AUrl;
+  FDescription := ADescription;
+  FVariables := AVariables;
 end;
 
 destructor TOpenapiServer.Destroy;

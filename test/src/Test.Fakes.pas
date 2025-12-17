@@ -14,7 +14,19 @@ function GetFakeJsonSpec: TJSONObject;
 
 function CreateFakeInfoJson: TJSONObject;
 
+function CreateFakeServersJson: TJSONArray;
+
+function CreateFakeServerObjectJson: TJSONObject;
+
+function CreateFakeEmptyJsonArray: TJSONArray;
+
 function CreateFakeEmptyJsonObject: TJSONObject;
+
+function CreateFakeJsonPaths: TJSONObject;
+
+function CreateFakeJsonPath: TJSONObject;
+
+function CreateFakeTags: TJSONArray;
 
 implementation
 
@@ -64,9 +76,62 @@ begin
   Result.Add('description', 'fake_description');
 end;
 
+function CreateFakeServersJson: TJSONArray;
+begin
+  Result := TJSONArray.Create();
+  Result.Add(CreateFakeServerObjectJson());
+end;
+
+function CreateVariables: TJSONObject; forward;
+
+function CreateFakeServerObjectJson: TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  Result.Add('url', 'fake_url');
+  Result.Add('description', 'fake_description');
+  Result.Add('variables', CreateVariables());
+end;
+
+function CreateVariables: TJSONObject;
+begin
+  Result := TJSONObject.Create;
+end;
+
+function CreateFakeEmptyJsonArray: TJSONArray;
+begin
+  Result := TJSONArray.Create();
+end;
+
 function CreateFakeEmptyJsonObject: TJSONObject;
 begin
   Result := TJSONObject.Create;
+end;
+
+function CreateFakeJsonPaths: TJSONObject;
+var
+  LocalObj: TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  LocalObj := TJSONObject.Create();
+  LocalObj.Add('get', CreateFakeJsonPath());
+  LocalObj.Add('post', CreateFakeJsonPath());
+  LocalObj.Add('put', CreateFakeJsonPath());
+  LocalObj.Add('delete', CreateFakeJsonPath());
+  Result.Add('/help', LocalObj);
+end;
+
+function CreateFakeJsonPath: TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  Result.Add('operationId', 'getHelp');
+  Result.Add('description', 'fake_description');
+  Result.Add('tags', CreateFakeTags());
+end;
+
+function CreateFakeTags: TJSONArray;
+begin
+  Result := TJSONArray.Create;
+  Result.Add('help');
 end;
 
 end.

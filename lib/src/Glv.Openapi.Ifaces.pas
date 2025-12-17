@@ -5,8 +5,10 @@
 interface
 
 uses
+  Generics.Collections,
   Glv.Openapi.Version,
-  Glv.Openapi.Server;
+  Glv.Openapi.Server,
+  Glv.Openapi.Routes;
 
 type
   IInfo = interface;
@@ -39,10 +41,34 @@ type
     property Version: UnicodeString read GetVersion;
   end;
 
-  IPaths = interface
+  IPath = interface
+    function GetUrl: UnicodeString;
+    function GetMethod: TOpenApiMethod;
+    function GetHeaders: THeaders;
+    function GetParameters: TParameters;
+    function GetOperationID: UnicodeString;
+    function GetDescription: UnicodeString;
+    function GetTags: TTags;
+
+    property Url: UnicodeString read GetUrl;
+    property Method: TOpenApiMethod read GetMethod;
+    property Headers: THeaders read GetHeaders;
+    property Parameters: TParameters read GetParameters;
+    property OperationID: UnicodeString read GetOperationID;
+    property Description: UnicodeString read GetDescription;
+    property Tags: TTags read GetTags;
   end;
 
-  IPath = interface
+  IPaths = interface
+    function GetItems: TEnumerable<IPath>;
+    function GetByUrl(const AUrl: UnicodeString): TArray<IPath>;
+    function GetByIdx(const AIdx: Integer): IPath;
+    function GetCount: Integer;
+
+    property Items: TEnumerable<IPath> read GetItems;
+    property ByUrl[const AUrl: UnicodeString]: TArray<IPath> read GetByUrl;
+    property ByIdx[const AIdx: Integer]: IPath  read GetByIdx;
+    property Count: Integer read GetCount;
   end;
 
   IServers = interface

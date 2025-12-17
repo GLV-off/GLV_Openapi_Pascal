@@ -5,15 +5,17 @@
 interface
 
 uses
+  Generics.Collections,
   Glv.Openapi.Version,
   Glv.Openapi.Server,
+  Glv.Openapi.Routes,
   Glv.Openapi.Ifaces;
 
 type
   {
 
   }
-  TBaseOpenapiDocument = class(TInterfacedObject, IOpenapiDocument)
+  TBaseOpenapiDocument = class abstract(TInterfacedObject, IOpenapiDocument)
   strict protected
     function GetOpenapi: TOpenapiVersion; virtual; abstract;
     function GetInfo: IInfo; virtual; abstract;
@@ -28,7 +30,10 @@ type
     property Components: IComponents read GetComponents;
   end;
 
-  TBaseInfo = class abstract (TInterfacedObject, IInfo)
+  {
+
+  }
+  TBaseInfo = class abstract(TInterfacedObject, IInfo)
   strict protected
     function GetTitle: UnicodeString; virtual; abstract;
     function GetDescription: UnicodeString; virtual; abstract;
@@ -39,6 +44,9 @@ type
     property Version: UnicodeString read GetVersion;
   end;
 
+  {
+
+  }
   TBaseServers = class abstract(TInterfacedObject, IServers)
   strict protected
     function GetCount: Integer; virtual; abstract;
@@ -46,6 +54,43 @@ type
   public
     property Server[const AIdx: Integer]: TOpenapiServer read GetServer;
     property Count: Integer read GetCount;
+  end;
+
+  {
+  }
+  TBasePaths = class(TInterfacedObject, IPaths)
+  strict protected
+    function GetItems: TEnumerable<IPath>; virtual; abstract;
+    function GetByUrl(const AUrl: UnicodeString): TArray<IPath>; virtual; abstract;
+    function GetByIdx(const AIdx: Integer): IPath; virtual; abstract;
+    function GetCount: Integer; virtual; abstract;
+
+    property Items: TEnumerable<IPath> read GetItems;
+    property ByUrl[const AUrl: UnicodeString]: TArray<IPath> read GetByUrl;
+    property ByIdx[const AIdx: Integer]: IPath  read GetByIdx;
+    property Count: Integer read GetCount;
+  end;
+
+  {
+
+  }
+  TBasePath = class abstract(TInterfacedObject, IPath)
+  strict protected
+    function GetUrl: UnicodeString; virtual; abstract;
+    function GetMethod: TOpenApiMethod; virtual; abstract;
+    function GetHeaders: THeaders; virtual; abstract;
+    function GetParameters: TParameters; virtual; abstract;
+    function GetOperationID: UnicodeString; virtual; abstract;
+    function GetDescription: UnicodeString; virtual; abstract;
+    function GetTags: TTags; virtual; abstract;
+  public
+    property Url: UnicodeString read GetUrl;
+    property Method: TOpenApiMethod read GetMethod;
+    property Headers: THeaders read GetHeaders;
+    property Parameters: TParameters read GetParameters;
+    property OperationID: UnicodeString read GetOperationID;
+    property Description: UnicodeString read GetDescription;
+    property Tags: TTags read GetTags;
   end;
 
   {
@@ -79,9 +124,7 @@ type
     function GetPaths: IPaths; override;
     function GetComponents: IComponents; override;
   public
-    constructor Create(
-      const AOpenapi: TOpenapiVersion
-    );
+    constructor Create(const AOpenapi: TOpenapiVersion);
     destructor Destroy; override;
   end;
 
@@ -151,12 +194,10 @@ begin
   Result := FComponents;
 end;
 
-constructor TDefaultOpenapiDocument.Create(
-  const AOpenapi: TOpenapiVersion
-);
+constructor TDefaultOpenapiDocument.Create(const AOpenapi: TOpenapiVersion);
 begin
   inherited Create;
-  FOpenapi := AOpenapi;
+  FOpenApi := AOpenApi;
 end;
 
 destructor TDefaultOpenapiDocument.Destroy;

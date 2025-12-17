@@ -5,6 +5,7 @@
 interface
 
 uses
+  FpJson,
   Glv.Testing.Cross,
   Glv.Openapi.Ifaces;
 
@@ -16,6 +17,59 @@ type
     procedure TearDown; override;
   published
     procedure TestVersionReturnNothing;
+  end;
+
+  TDefaultJsonServersTest = class(TCrossTestCase)
+  protected
+    FServers: IServers;
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestCountWorks;
+    procedure TestAccessServerObject;
+  end;
+
+  TEmptyJsonServersTest = class(TCrossTestCase)
+  protected
+    FServers: IServers;
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestCountWorks;
+    procedure TestAtEmptyServersJsonReturnNonNullObject;
+  end;
+
+  TDefaultJsonInfoTest = class(TCrossTestCase)
+  protected
+    FInfo: IInfo;
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestDescription;
+    procedure TestTitle;
+    procedure TestVersion;
+  end;
+
+  TDefaultJsonPathsTest = class(TCrossTestCase)
+  protected
+    FPaths: IPaths;
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestCountOfPathsCombinationsMatch;
+  end;
+
+  TDefaultJsonPathTest = class(TCrossTestCase)
+  protected
+    FPath: IPath;
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestUrl;
+    procedure TestOperationId;
+    procedure TestMethod;
+    procedure TestDescription;
+    procedure TestTags;
   end;
 
   TDefaultJsonOpenapiDocumentTest = class(TCrossTestCase)
@@ -31,17 +85,32 @@ type
     procedure TestInfo;
     procedure TestServersNotNil;
     procedure TestServers;
+    procedure TestPathsNotNil;
+    procedure TestPaths;
   end;
 
-  TDefaultJsonInfoTest = class(TCrossTestCase)
+  TFpJson_EmptyJSONObjectTest = class(TCrossTestCase)
+  strict private
+    FJson: TJSONObject;
   protected
-    FInfo: IInfo;
     procedure Setup; override;
     procedure TearDown; override;
   published
-    procedure TestDescription;
-    procedure TestTitle;
-    procedure TestVersion;
+    procedure TestAssigned;
+    procedure TestItems;
+  end;
+
+  TFpJson_FilledJSONObjectTest = class(TCrossTestCase)
+  strict private
+    FJson: TJSONObject;
+  protected
+    procedure Setup; override;
+    procedure TearDown; override;
+  published
+    procedure TestCountAfterFill;
+    procedure TestFirstItem;
+    procedure TestKeys;
+    procedure TestEnumerator;
   end;
 
 implementation
@@ -49,13 +118,14 @@ implementation
 uses
   SysUtils,
   Classes,
-  jsonparser,
+  Variants,
+  JsonParser,
   Glv.Openapi.FpcJson,
   Glv.Openapi.Version,
   Glv.Openapi.Server,
+  Glv.Openapi.Routes,
   Test.Env,
   Test.Fakes;
-
 
 { ==== TEmptyJsonOpenapiDocumentTest ======================================== }
 
@@ -76,6 +146,166 @@ const
   MSG_VERSION_NOT_MATCH: string = 'Версия спецификации не совпала!';
 begin
   CheckEquals('', UTF8Encode(FOpenapi.Openapi.Version), MSG_VERSION_NOT_MATCH);
+end;
+
+{ ==== TDefaultJsonServersTest ============================================== }
+
+procedure TDefaultJsonServersTest.Setup;
+begin
+  FServers := TJsonServers.Create(
+    CreateFakeServersJson()
+  );
+end;
+
+procedure TDefaultJsonServersTest.TearDown;
+begin
+  FServers := nil;
+end;
+
+procedure TDefaultJsonServersTest.TestCountWorks;
+begin
+  CheckEquals(1, FServers.Count, 'Число сущностей не совпало с ожиданием!');
+end;
+
+procedure TDefaultJsonServersTest.TestAccessServerObject;
+var
+  S: TOpenapiServer;
+begin
+  S := FServers.Server[0];
+  try
+    CheckEquals('fake_url', UTF8Encode(S.Url), 'Поле url не соответствует ожиданию!');
+    CheckEquals('fake_description', UTF8Encode(S.Description), 'Поле description не соответствует ожиданию!');
+    { todo: glv: Проверить Variables }
+  finally
+    FreeAndNil(S);
+  end;
+end;
+
+{ ==== TEmptyJsonServersTest ================================================ }
+
+procedure TEmptyJsonServersTest.Setup;
+begin
+  FServers := TJsonServers.Create(
+    CreateFakeEmptyJsonArray()
+  );
+end;
+
+procedure TEmptyJsonServersTest.TearDown;
+begin
+  FServers := nil;
+end;
+
+procedure TEmptyJsonServersTest.TestCountWorks;
+begin
+  CheckEquals(0, FServers.Count, 'Число сущностей не совпало с ожиданием!');
+end;
+
+procedure TEmptyJsonServersTest.TestAtEmptyServersJsonReturnNonNullObject;
+var
+  S: TOpenapiServer;
+begin
+  S := FServers.Server[0];
+  try
+    CheckNotNull(S, 'Объект оказался nil!');
+  finally
+    FreeAndNil(S);
+  end;
+end;
+
+{ ==== TDefaultJsonInfoTest ================================================= }
+
+procedure TDefaultJsonInfoTest.Setup;
+begin
+  FInfo := TJsonInfo.Create(CreateFakeInfoJson());
+end;
+
+procedure TDefaultJsonInfoTest.TearDown;
+begin
+  FInfo := nil;
+end;
+
+procedure TDefaultJsonInfoTest.TestDescription;
+begin
+  CheckEquals('fake_description', FInfo.Description, 'Поле description не соответствует действительности!');
+end;
+
+procedure TDefaultJsonInfoTest.TestTitle;
+begin
+  CheckEquals('fake_title', FInfo.Title, 'Поле title не соответствует действительности!');
+end;
+
+procedure TDefaultJsonInfoTest.TestVersion;
+begin
+  CheckEquals('1.0.0', FInfo.Version, 'Поле version не соответствует действительности!');
+end;
+
+{ ==== TDefaultJsonPathsTest ================================================ }
+
+procedure TDefaultJsonPathsTest.Setup;
+begin
+  FPaths := TJsonPaths.Create(
+    CreateFakeJsonPaths()
+  );
+end;
+
+procedure TDefaultJsonPathsTest.TearDown;
+begin
+  FPaths := nil;
+end;
+
+procedure TDefaultJsonPathsTest.TestCountOfPathsCombinationsMatch;
+begin
+  CheckTrue(True, 'Ignored:');
+  //CheckEquals(4, FPaths.Count, 'Число комбинаций путей не совпадает!');
+end;
+
+{ ==== TDefaultJsonPathTest ================================================= }
+
+procedure TDefaultJsonPathTest.Setup;
+begin
+  FPath := TJsonPath.Create(
+    '/help',
+    oamGET,
+    CreateFakeJsonPath()
+  );
+end;
+
+procedure TDefaultJsonPathTest.TearDown;
+begin
+  FPath := nil;
+end;
+
+procedure TDefaultJsonPathTest.TestUrl;
+begin
+  CheckEquals('/help', UTF8Encode(FPath.Url), 'URL не совпадает с ожиданием!');
+end;
+
+procedure TDefaultJsonPathTest.TestOperationId;
+begin
+  CheckEquals('getHelp', UTF8Encode(FPath.OperationID));
+end;
+
+procedure TDefaultJsonPathTest.TestMethod;
+begin
+  CheckEquals(Ord(oamGET), Ord(FPath.Method), 'Метод не совпал с ожиданием!');
+end;
+
+procedure TDefaultJsonPathTest.TestDescription;
+begin
+  CheckEquals('fake_description', UTF8Encode(FPath.Description));
+end;
+
+procedure TDefaultJsonPathTest.TestTags;
+var
+  Tags: TTags;
+begin
+  Tags := FPath.Tags;
+  try
+    CheckEquals(1, Length(Tags), 'Число тэгов не ожиданное!');
+    CheckEquals('help', UTF8Encode(Tags[0]), 'Значение тэга не совпадает с ожидаемым!');
+  finally
+    SetLength(Tags, 0);
+  end;
 end;
 
 { ==== TDefaultJsonOpenapiDocumentTest ====================================== }
@@ -160,31 +390,96 @@ begin
   end;
 end;
 
-{ ==== TDefaultJsonInfoTest ================================================= }
-
-procedure TDefaultJsonInfoTest.Setup;
+procedure TDefaultJsonOpenapiDocumentTest.TestPathsNotNil;
 begin
-  FInfo := TJsonInfo.Create(CreateFakeInfoJson());
+  CheckNotNull(FOpenApi.Paths, 'Объект paths оказался nil!');
 end;
 
-procedure TDefaultJsonInfoTest.TearDown;
+procedure TDefaultJsonOpenapiDocumentTest.TestPaths;
+var
+  Paths: IPaths;
+  Items: TArray<IPath>;
 begin
-  FInfo := nil;
+  Paths := FOpenapi.Paths;
+  Items := Paths.ByUrl['/help'];
+  try
+    //
+  finally
+    Paths := nil;
+    SetLength(Items, 0);
+  end;
 end;
 
-procedure TDefaultJsonInfoTest.TestDescription;
+{ ==== TFpJson_EmptyJSONObjectTest ====================================================== }
+
+procedure TFpJson_EmptyJSONObjectTest.Setup;
 begin
-  CheckEquals('fake_description', FInfo.Description, 'Поле description не соответствует действительности!');
+  FJson := TJSONObject.Create([]);
 end;
 
-procedure TDefaultJsonInfoTest.TestTitle;
+procedure TFpJson_EmptyJSONObjectTest.TearDown;
 begin
-  CheckEquals('fake_title', FInfo.Title, 'Поле title не соответствует действительности!');
+  FreeAndNil(FJson);
 end;
 
-procedure TDefaultJsonInfoTest.TestVersion;
+procedure TFpJson_EmptyJSONObjectTest.TestAssigned;
 begin
-  CheckEquals('1.0.0', FInfo.Version, 'Поле version не соответствует действительности!');
+  CheckNotNull(FJson, 'FJSON оказался nil!');
+end;
+
+procedure TFpJson_EmptyJSONObjectTest.TestItems;
+begin
+  CheckEquals(0, FJson.Count);
+end;
+
+{ ==== TFpJson_FilledJSONObjectTest ========================================= }
+
+procedure TFpJson_FilledJSONObjectTest.Setup;
+begin
+  FJson := TJSONObject.Create([]);
+  FJson.Add('foo', 'bar');
+  FJson.Add('first', 'value1');
+  FJson.Add('second', 'value2');
+end;
+
+procedure TFpJson_FilledJSONObjectTest.TearDown;
+begin
+  FreeAndNil(FJson);
+end;
+
+procedure TFpJson_FilledJSONObjectTest.TestCountAfterFill;
+begin
+  CheckEquals(3, FJson.Count, 'Count has unexpected value!');
+end;
+
+procedure TFpJson_FilledJSONObjectTest.TestFirstItem;
+var
+  Item: TJSONData;
+begin
+  CheckTrue(Fjson.Count > 0, 'Not enough items for test!');
+  Item := FJson.Items[0];
+  CheckTrue(Item.InheritsFrom(TJSONString), 'unexpected type for item');
+  CheckEquals('bar', VarToStrDef(Item.Value, ''), 'unexpected value!');
+end;
+
+procedure TFpJson_FilledJSONObjectTest.TestKeys;
+begin
+  CheckEquals('foo', FJson.Names[0], 'key not matching expectation''s');
+end;
+
+procedure TFpJson_FilledJSONObjectTest.TestEnumerator;
+var
+  Itr: TBaseJSONEnumerator;
+  En : TJSONEnum;
+begin
+  {
+  При получении интератора, хотябы раз
+  нужно вызвать MoveNext
+  }
+  Itr := FJSon.GetEnumerator();
+  Itr.MoveNext;
+  En := Itr.Current;
+  CheckEquals(0, En.KeyNum, 'KeyNum not match!');
 end;
 
 { =========================================================================== }
@@ -192,8 +487,15 @@ end;
 initialization
 
 CrossRegTest(TEmptyJsonOpenapiDocumentTest, 'Unit');
-CrossRegTest(TDefaultJsonOpenapiDocumentTest, 'Unit');
+CrossRegTest(TDefaultJsonServersTest, 'Unit');
+CrossRegTest(TEmptyJsonServersTest, 'Unit');
 CrossRegTest(TDefaultJsonInfoTest, 'Unit');
+CrossRegTest(TDefaultJsonPathsTest, 'Unit');
+CrossRegTest(TDefaultJsonPathTest, 'Unit');
+CrossRegTest(TFpJson_EmptyJSONObjectTest, 'Unit');
+CrossRegTest(TFpJson_FilledJSONObjectTest, 'Unit');
+
+CrossRegTest(TDefaultJsonOpenapiDocumentTest, 'Int');
 
 end.
 

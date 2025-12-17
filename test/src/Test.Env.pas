@@ -9,10 +9,19 @@ type
    Окружение тестового приложения
   }
   TEnv = record
+    {
+
+    }
     class function GetRoot: UnicodeString; static;
 
+    {
+
+    }
     class function GetAssetDir: UnicodeString; static;
 
+    {
+     Получить
+    }
     class function GetAsset(const APath: UnicodeString): UnicodeString; static;
   end;
 

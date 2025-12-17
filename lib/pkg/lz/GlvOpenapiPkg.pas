@@ -9,7 +9,8 @@ interface
 
 uses
   Glv.Openapi, Glv.Openapi.Ifaces, Glv.Openapi.Json, Glv.Openapi.Version, 
-  Glv.Openapi.FpcJson, Glv.Openapi.Wrap, Glv.Openapi.Server, LazarusPackageIntf;
+  Glv.Openapi.FpcJson, Glv.Openapi.Wrap, Glv.Openapi.Server, 
+  Glv.Openapi.Routes, LazarusPackageIntf;
 
 implementation
 

@@ -47,6 +47,10 @@
         <Filename Value="..\..\src\Glv.Openapi.Server.pas"/>
         <UnitName Value="Glv.Openapi.Server"/>
       </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.Routes.pas"/>
+        <UnitName Value="Glv.Openapi.Routes"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>
