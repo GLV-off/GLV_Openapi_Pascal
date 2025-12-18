@@ -9,6 +9,7 @@ uses
 
 const
   TEST_ASSET_FAKE_SPEC_JSON: UnicodeString = 'fake_spec.json';
+  TEST_ASSET_FAKE_SPEC_YAML: UnicodeString = 'fake_spec.yaml';
 
 function GetFakeJsonSpec: TJSONObject;
 

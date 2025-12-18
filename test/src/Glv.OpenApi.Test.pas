@@ -10,6 +10,11 @@ uses
   Glv.Openapi.Ifaces;
 
 type
+
+  {
+   МОДУЛЬНЫЕ ТЕСТЫ
+  }
+
   {
    Testing empty JSON openapi object
    document representation.
@@ -80,23 +85,6 @@ type
     procedure TestTags;
   end;
 
-  TDefaultJsonOpenapiDocumentTest = class(TCrossTestCase)
-  protected
-    FOpenapi: IOpenapiDocument;
-    procedure SetUp; override;
-    procedure TearDown; override;
-  published
-    procedure TestAssetExists;
-    procedure TestAssetHasUtf8BomEncoding;
-    procedure TestVersion;
-    procedure TestInfoNotNull;
-    procedure TestInfo;
-    procedure TestServersNotNil;
-    procedure TestServers;
-    procedure TestPathsNotNil;
-    procedure TestPaths;
-  end;
-
   TFpJson_EmptyJSONObjectTest = class(TCrossTestCase)
   strict private
     FJson: TJSONObject;
@@ -119,6 +107,27 @@ type
     procedure TestFirstItem;
     procedure TestKeys;
     procedure TestEnumerator;
+  end;
+
+  {
+   ИНТЕГРАЦИОННЫЕ ТЕСТЫ
+  }
+
+  TDefaultJsonOpenapiDocumentTest = class(TCrossTestCase)
+  protected
+    FOpenapi: IOpenapiDocument;
+    procedure SetUp; override;
+    procedure TearDown; override;
+  published
+    procedure TestAssetExists;
+    procedure TestAssetHasUtf8BomEncoding;
+    procedure TestVersion;
+    procedure TestInfoNotNull;
+    procedure TestInfo;
+    procedure TestServersNotNil;
+    procedure TestServers;
+    procedure TestPathsNotNil;
+    procedure TestPaths;
   end;
 
 implementation
@@ -266,8 +275,8 @@ end;
 
 procedure TDefaultJsonPathsTest.TestCountOfPathsCombinationsMatch;
 begin
-  CheckTrue(True, 'Ignored:');
-  //CheckEquals(4, FPaths.Count, 'Число комбинаций путей не совпадает!');
+  //CheckTrue(True, 'Ignored:');
+  CheckEquals(4, FPaths.Count, 'Число комбинаций путей не совпадает!');
 end;
 
 { ==== TDefaultJsonPathTest ================================================= }
@@ -408,14 +417,18 @@ begin
 end;
 
 procedure TDefaultJsonOpenapiDocumentTest.TestPaths;
+const
+  MSG_NOT_ASSIGNED: string = 'Блок path не задан';
+  MSG_ITEMS_LEN: string = 'Число элементов несоответствует действиетльности!';
 var
   Paths: IPaths;
   Items: TArray<IPath>;
 begin
   Paths := FOpenapi.Paths;
-  Items := Paths.ByUrl['/help'];
   try
-    //
+    CheckNotNull(Paths, MSG_NOT_ASSIGNED);
+    Items := Paths.ByUrl['/help'];
+    CheckEquals(0, Length(Items), MSG_ITEMS_LEN);
   finally
     Paths := nil;
     SetLength(Items, 0);
