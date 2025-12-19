@@ -108,38 +108,8 @@ implementation
 
 uses
   SysUtils,
-  Variants;
-
-{ ==== FUNCTION'S =========================================================== }
-
-function CountOf(const AJson: TJSONObject; const AKeys: TArray<string>): Integer;
-var
-  J: Integer;
-  I: Integer;
-  Obj: TJSONObject;
-  X: TJSONData;
-  SubCount: Integer;
-  Tmp: TJSONData;
-begin
-  Result := 0;
-  for I := 0 to AJson.Count - 1 do
-  begin
-    SubCount := 0;
-    X := AJson.Items[I];
-    if X.InheritsFrom(TJSONObject) then
-    begin
-      Obj := TJSONObject(X);
-      for J := 0 to Length(AKeys) - 1 do
-      begin
-        if Obj.Find(AKeys[J], Tmp) then
-          Inc(SubCount, CountOf(Obj, AKeys))
-      end;
-      if SubCount <= 0 then
-        Inc(SubCount, 1);
-    end;
-    Inc(Result, SubCount);
-  end;
-end;
+  Variants,
+  Glv.Openapi.FpJsonFuncs;
 
 { ==== TJsonOpenapiDocument ================================================= }
 
@@ -307,7 +277,8 @@ end;
 
 function TJsonPaths.GetCount: Integer;
 begin
-  Result := CountOf(FJSON, ['get', 'post', 'put', 'delete']);
+  Result := Glv.Openapi.FpJsonFuncs.CountOf(
+    FJSON, TOpenApiMethod.RawStrings());
 end;
 
 constructor TJsonPaths.Create(const AJson: TJSONObject);

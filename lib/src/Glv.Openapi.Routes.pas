@@ -5,6 +5,7 @@ unit Glv.Openapi.Routes;
 interface
 
 uses
+  TypInfo,
   SysUtils,
   Generics.Defaults,
   Generics.Collections;
@@ -20,6 +21,15 @@ type
     oamHEAD,
     oamOPTION
   );
+
+  TOpenApiMethodHelper = record helper for TOpenApiMethod
+    {}
+    function ToHttpStr: UnicodeString;
+    {}
+    class function RawStrings: TArray<UnicodeString>; static;
+    {}
+    function IsRealMethod: Boolean;
+  end;
 
   THeader = UnicodeString;
 
@@ -73,6 +83,30 @@ type
   end;
 
 implementation
+
+function TOpenApiMethodHelper.ToHttpStr: UnicodeString;
+begin
+  Result := UTF8Decode(GetEnumName(TypeInfo(Self), Ord(Self)));
+  Result := Copy(Result, 4);
+  Result := LowerCase(Result);
+end;
+
+class function TOpenApiMethodHelper.RawStrings: TArray<UnicodeString>;
+begin
+  REsult := [
+    oamGET.ToHttpStr,
+    oamPOST.ToHttpStr,
+    oamPUT.ToHttpStr,
+    oamDELETE.ToHttpStr,
+    oamHEAD.ToHttpStr,
+    oamOPTION.ToHttpStr
+  ];
+end;
+
+function TOpenApiMethodHelper.IsRealMethod: Boolean;
+begin
+  Result := (Self <> oamUnknown) and (Self <> oamUnsuported);
+end;
 
 constructor TParameters.Create;
 begin

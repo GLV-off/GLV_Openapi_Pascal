@@ -29,8 +29,8 @@ type
   end;
 
   {
-   Tests for default preloaded FAKE asset
-   as Open API Json document
+   Tests for default preloaded FAKE
+   asset as Open API Json document
   }
   TDefaultJsonServersTest = class(TCrossTestCase)
   protected
@@ -105,8 +105,18 @@ type
   published
     procedure TestCountAfterFill;
     procedure TestFirstItem;
+    procedure TestSeconItem;
     procedure TestKeys;
     procedure TestEnumerator;
+  end;
+
+  TPrimitiveTest = class(TCrossTestCase)
+  published
+    procedure TestGetAsString;
+    procedure TestDeleteAsString;
+    procedure TestPutAsString;
+
+    procedure TestRawStrings;
   end;
 
   {
@@ -275,8 +285,7 @@ end;
 
 procedure TDefaultJsonPathsTest.TestCountOfPathsCombinationsMatch;
 begin
-  //CheckTrue(True, 'Ignored:');
-  CheckEquals(4, FPaths.Count, 'Число комбинаций путей не совпадает!');
+  CheckEquals(4, FPaths.Count, 'Count of paths not match!');
 end;
 
 { ==== TDefaultJsonPathTest ================================================= }
@@ -464,7 +473,7 @@ begin
   FJson := TJSONObject.Create([]);
   FJson.Add('foo', 'bar');
   FJson.Add('first', 'value1');
-  FJson.Add('second', 'value2');
+  FJson.Add('second', TJSONObject.Create());
 end;
 
 procedure TFpJson_FilledJSONObjectTest.TearDown;
@@ -487,6 +496,16 @@ begin
   CheckEquals('bar', VarToStrDef(Item.Value, ''), 'unexpected value!');
 end;
 
+procedure TFpJson_FilledJSONObjectTest.TestSeconItem;
+var
+  Item: TJSONData;
+begin
+  CheckTrue(Fjson.Count >= 2, 'Not enough items for test!');
+  Item := FJson.Items[2];
+  CheckTrue(Item.InheritsFrom(TJSONObject), 'unexpected type for item');
+  //CheckEquals('bar', VarToStrDef(Item.Value, ''), 'unexpected value!');
+end;
+
 procedure TFpJson_FilledJSONObjectTest.TestKeys;
 begin
   CheckEquals('foo', FJson.Names[0], 'key not matching expectation''s');
@@ -505,6 +524,29 @@ begin
   CheckEquals(0, En.KeyNum, 'KeyNum not match!');
 end;
 
+procedure TPrimitiveTest.TestGetAsString;
+begin
+  CheckEquals('get', oamGET.ToHttpStr());
+end;
+
+procedure TPrimitiveTest.TestDeleteAsString;
+begin
+  CheckEquals('delete', oamDELETE.ToHttpStr());
+end;
+
+procedure TPrimitiveTest.TestPutAsString;
+begin
+  CheckEquals('put', oamPUT.ToHttpStr());
+end;
+
+procedure TPrimitiveTest.TestRawStrings;
+var
+  RawStrings: TArray<UnicodeString>;
+begin
+  RawStrings := TOpenApiMethod.RawStrings();
+  CheckEquals(6, Length(RawStrings));
+end;
+
 { =========================================================================== }
 
 initialization
@@ -517,6 +559,7 @@ CrossRegTest(TDefaultJsonPathsTest, 'Unit');
 CrossRegTest(TDefaultJsonPathTest, 'Unit');
 CrossRegTest(TFpJson_EmptyJSONObjectTest, 'Unit');
 CrossRegTest(TFpJson_FilledJSONObjectTest, 'Unit');
+CrossRegTest(TPrimitiveTest, 'Unit');
 
 CrossRegTest(TDefaultJsonOpenapiDocumentTest, 'Int');
 

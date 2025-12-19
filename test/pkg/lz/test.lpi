@@ -86,6 +86,10 @@
         <Filename Value="..\..\src\Test.Fakes.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
+      <Unit>
+        <Filename Value="..\..\src\Glv.OpenApi.FpJsonUtils.Test.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

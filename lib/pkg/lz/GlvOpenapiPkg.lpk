@@ -51,6 +51,10 @@
         <Filename Value="..\..\src\Glv.Openapi.Routes.pas"/>
         <UnitName Value="Glv.Openapi.Routes"/>
       </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Openapi.FpJsonFuncs.pas"/>
+        <UnitName Value="Glv.Openapi.FpJsonFuncs"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

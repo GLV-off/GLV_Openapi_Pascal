@@ -6,8 +6,9 @@ uses
 {$IFDEF WINDOWS}
   Windows,
 {$ENDIF WINDOWS}
-  Glv.OpenApi.Test,
   Glv.Testing.App,
+  Glv.OpenApi.Test,
+  Glv.OpenApi.FpJsonUtils.Test,
   Test.Env,
   Test.Fakes;
 begin
