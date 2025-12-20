@@ -11,8 +11,9 @@ uses
 
 type
   {
-   Tests for default preloaded FAKE
-   asset as Open API Json document
+   Tests for the "CountOf" function
+   counting pairs with objects by
+   a list in a JSON object
   }
   TCountOfTest = class(TCrossTestCase)
   published
@@ -29,6 +30,8 @@ implementation
 uses
   Glv.Openapi.FpJsonFuncs,
   Test.Fakes;
+
+{ =========================================================================== }
 
 procedure TCountOfTest.TestEmptyJsonReturnZero;
 const
@@ -74,6 +77,8 @@ begin
     FreeAndNil(Json);
   end;
 end;
+
+{ =========================================================================== }
 
 initialization
 
