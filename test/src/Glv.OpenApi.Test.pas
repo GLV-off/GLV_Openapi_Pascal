@@ -7,7 +7,8 @@ interface
 uses
   FpJson,
   Glv.Testing.Cross,
-  Glv.Openapi.Ifaces;
+  Glv.Openapi.Ifaces,
+  Glv.Openapi.Routes;
 
 type
 
@@ -85,6 +86,16 @@ type
     procedure TestTags;
   end;
 
+  TOpenapiRouteTest = class(TCrossTestCase)
+  strict private
+    FRoute: TOpenapiRoute;
+  protected
+    procedure SetUp; override;
+    procedure TearDown; override;
+  published
+    procedure TestSimple;
+  end;
+
   TFpJson_EmptyJSONObjectTest = class(TCrossTestCase)
   strict private
     FJson: TJSONObject;
@@ -150,7 +161,6 @@ uses
   Glv.Openapi.FpcJson,
   Glv.Openapi.Version,
   Glv.Openapi.Server,
-  Glv.Openapi.Routes,
   Test.Env,
   Test.Fakes;
 
@@ -170,7 +180,7 @@ end;
 
 procedure TEmptyJsonOpenapiDocumentTest.TestVersionReturnNothing;
 const
-  MSG_VERSION_NOT_MATCH: string = 'Версия спецификации не совпала!';
+  MSG_VERSION_NOT_MATCH: string = 'Version of specification not match!';
 begin
   CheckEquals('', UTF8Encode(FOpenapi.Openapi.Version), MSG_VERSION_NOT_MATCH);
 end;
@@ -255,18 +265,24 @@ begin
 end;
 
 procedure TDefaultJsonInfoTest.TestDescription;
+const
+  EXPECTED: UnicodeString = 'fake_description';
 begin
-  CheckEquals('fake_description', FInfo.Description, 'Поле description не соответствует действительности!');
+  CheckEquals(EXPECTED, FInfo.Description, 'Поле description не соответствует действительности!');
 end;
 
 procedure TDefaultJsonInfoTest.TestTitle;
+const
+  EXPECTED: UnicodeString = 'fake_title';
 begin
-  CheckEquals('fake_title', FInfo.Title, 'Поле title не соответствует действительности!');
+  CheckEquals(EXPECTED, FInfo.Title, 'Поле title не соответствует действительности!');
 end;
 
 procedure TDefaultJsonInfoTest.TestVersion;
+const
+  EXPECTED: UnicodeString = '1.0.0';
 begin
-  CheckEquals('1.0.0', FInfo.Version, 'Поле version не соответствует действительности!');
+  CheckEquals(EXPECTED, FInfo.Version, 'Поле version не соответствует действительности!');
 end;
 
 { ==== TDefaultJsonPathsTest ================================================ }
@@ -335,6 +351,28 @@ begin
   finally
     SetLength(Tags, 0);
   end;
+end;
+
+procedure TOpenapiRouteTest.SetUp;
+begin
+  FRoute := TOpenapiRoute.Create(
+    oamGET,
+    '/fake',
+    'getFake',
+    TParameters.Create(),
+    [],
+    THeaders.Create()
+  );
+end;
+
+procedure TOpenapiRouteTest.TearDown;
+begin
+  FreeAndNil(FRoute);
+end;
+
+procedure TOpenapiRouteTest.TestSimple;
+begin
+  CheckNotNull(FRoute, 'Route should be assigned!');
 end;
 
 { ==== TDefaultJsonOpenapiDocumentTest ====================================== }
@@ -413,8 +451,8 @@ begin
   CheckEquals(1, Servers.Count, 'Число элементов не соответствует!');
   Server := Servers.Server[0];
   try
-    CheckEquals('http://localhost/test', Server.Url);
-    CheckEquals('Тестовый сервер', Server.Description);
+    CheckEquals(UnicodeString('http://localhost/test'), Server.Url);
+    CheckEquals(UnicodeString('Тестовый сервер'), Server.Description);
   finally
     FreeAndNil(Server);
   end;
@@ -526,17 +564,17 @@ end;
 
 procedure TPrimitiveTest.TestGetAsString;
 begin
-  CheckEquals('get', oamGET.ToHttpStr());
+  CheckEquals(UnicodeString('get'), oamGET.ToHttpStr());
 end;
 
 procedure TPrimitiveTest.TestDeleteAsString;
 begin
-  CheckEquals('delete', oamDELETE.ToHttpStr());
+  CheckEquals(UnicodeString('delete'), oamDELETE.ToHttpStr());
 end;
 
 procedure TPrimitiveTest.TestPutAsString;
 begin
-  CheckEquals('put', oamPUT.ToHttpStr());
+  CheckEquals(UnicodeString('put'), oamPUT.ToHttpStr());
 end;
 
 procedure TPrimitiveTest.TestRawStrings;
@@ -557,6 +595,7 @@ CrossRegTest(TEmptyJsonServersTest, 'Unit');
 CrossRegTest(TDefaultJsonInfoTest, 'Unit');
 CrossRegTest(TDefaultJsonPathsTest, 'Unit');
 CrossRegTest(TDefaultJsonPathTest, 'Unit');
+CrossRegTest(TOpenapiRouteTest, 'Unit');
 CrossRegTest(TFpJson_EmptyJSONObjectTest, 'Unit');
 CrossRegTest(TFpJson_FilledJSONObjectTest, 'Unit');
 CrossRegTest(TPrimitiveTest, 'Unit');

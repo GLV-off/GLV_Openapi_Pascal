@@ -42,6 +42,9 @@ type
     property Version: UnicodeString read GetVersion;
   end;
 
+  {
+
+  }
   IPath = interface
     function GetUrl: UnicodeString;
     function GetMethod: TOpenApiMethod;
@@ -60,6 +63,9 @@ type
     property Tags: TTags read GetTags;
   end;
 
+  {
+   Path block of Open API specification
+  }
   IPaths = interface
     function GetItems: TEnumerable<IPath>;
     function GetByUrl(const AUrl: UnicodeString): TArray<IPath>;
@@ -72,6 +78,9 @@ type
     property Count: Integer read GetCount;
   end;
 
+  {
+   List of all servers from specification
+  }
   IServers = interface
     function GetCount: Integer;
     function GetServer(const AIdx: Integer): TOpenapiServer;
@@ -80,6 +89,9 @@ type
     property Count: Integer read GetCount;
   end;
 
+  {
+   Work with tags of Open Api document
+  }
   ITags = interface
     function GetTag(const AIdx: Integer): TOpenapiTag;
 
