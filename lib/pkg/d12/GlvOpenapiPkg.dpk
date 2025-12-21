@@ -1,0 +1,44 @@
+﻿package GlvOpenapiPkg;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS ON}
+{$RANGECHECKS ON}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl;
+
+contains
+  Glv.Openapi.DelphiJson in '..\..\src\Glv.Openapi.DelphiJson.pas',
+  Glv.Openapi.Ifaces in '..\..\src\Glv.Openapi.Ifaces.pas',
+  Glv.Openapi.Json in '..\..\src\Glv.Openapi.Json.pas',
+  Glv.Openapi in '..\..\src\Glv.Openapi.pas',
+  Glv.Openapi.Routes in '..\..\src\Glv.Openapi.Routes.pas',
+  Glv.Openapi.Server in '..\..\src\Glv.Openapi.Server.pas',
+  Glv.Openapi.Version in '..\..\src\Glv.Openapi.Version.pas',
+  Glv.Openapi.Wrap in '..\..\src\Glv.Openapi.Wrap.pas';
+
+end.

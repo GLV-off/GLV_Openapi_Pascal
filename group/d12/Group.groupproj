@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{F1D7116D-1083-46D6-9054-74DA29E1E997}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="..\..\lib\pkg\d12\GlvOpenapiPkg.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="GlvOpenapiPkg">
+        <MSBuild Projects="..\..\lib\pkg\d12\GlvOpenapiPkg.dproj"/>
+    </Target>
+    <Target Name="GlvOpenapiPkg:Clean">
+        <MSBuild Projects="..\..\lib\pkg\d12\GlvOpenapiPkg.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GlvOpenapiPkg:Make">
+        <MSBuild Projects="..\..\lib\pkg\d12\GlvOpenapiPkg.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="GlvOpenapiPkg"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="GlvOpenapiPkg:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="GlvOpenapiPkg:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
