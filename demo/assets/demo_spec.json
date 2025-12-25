@@ -1,0 +1,34 @@
+{
+  "openapi":"3.1.1",
+  "info": {
+    "title": "Тестовый ассет спецификации Open API",
+    "description": "Тестовый ассет и его описание",
+    "version": "1.2.3"
+  },
+  "servers": [
+    {
+      "url": "http://localhost/test",
+      "description": "Тестовый сервер"
+    }
+  ],
+  "paths": {
+    "/help": {
+      "get": {
+        "operationId": "getHelp",
+        "description": "Описание GET варианта",
+        "tags": ["help"]
+      },
+      "post": {
+        "operationId": "postHelp",
+        "description": "Описание POST варианта",
+        "tags": ["help"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "help",
+      "description": "Все что относится к справке"
+    }
+  ]
+}

@@ -206,6 +206,7 @@ end;
 
 procedure TDefaultJsonServersTest.TestAccessServerObject;
 const
+  MSG_NOT_NULL: string = 'Server object is nil!';
   MSG_URL: string = 'fake_url';
   MSG_DESC: string = 'fake_description';
 var
@@ -213,6 +214,7 @@ var
 begin
   S := FServers.Server[0];
   try
+    CheckNotNull(S, MSG_NOT_NULL);
     CheckEquals(MSG_URL, UTF8Encode(S.Url), 'Поле url не соответствует ожиданию!');
     CheckEquals(MSG_DESC, UTF8Encode(S.Description), 'Поле description не соответствует ожиданию!');
     { todo: glv: Проверить Variables }

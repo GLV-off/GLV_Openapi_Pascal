@@ -65,6 +65,7 @@ type
   }
   TJsonPaths = class(TBasePaths)
   strict private
+    FItems: TList<IPath>;
     FJson: TJSONObject;
   strict protected
     function GetItems: TEnumerable<IPath>; override;
@@ -72,6 +73,7 @@ type
     function GetByIdx(const AIdx: Integer): IPath; override;
     function GetCount: Integer; override;
   public
+    constructor Create(const AItems: TList<IPath>; const AJson: TJSONObject); overload;
     constructor Create(const AJson: TJSONObject); overload;
     constructor Create; overload;
     destructor Destroy; override;
@@ -103,6 +105,7 @@ type
       const AMethod: TOpenApiMethod); overload;
     destructor Destroy; override;
   end;
+
 
 implementation
 
@@ -256,12 +259,8 @@ begin
 end;
 
 function TJsonPaths.GetItems: TEnumerable<IPath>;
-var
-  List: TList<IPath>;
 begin
-  List := TList<IPath>.Create();
-  //List.Capacity :=
-  Result := List;
+  Result := FItems;
 end;
 
 function TJsonPaths.GetByUrl(const AUrl: UnicodeString): TArray<IPath>;
@@ -281,9 +280,17 @@ begin
     FJSON, TOpenApiMethod.RawStrings());
 end;
 
+constructor TJsonPaths.Create(const AItems: TList<IPath>; const AJson: TJSONObject);
+begin
+  inherited Create;
+  FItems := AItems;
+  FJson := AJson;
+end;
+
 constructor TJsonPaths.Create(const AJson: TJSONObject);
 begin
   inherited Create;
+  FItems := TList<IPath>.Create();
   FJson := AJson;
 end;
 

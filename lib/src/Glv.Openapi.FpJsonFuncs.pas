@@ -7,7 +7,6 @@ interface
 uses
   FpJson;
 
-{}
 function CountOf(const AJson: TJSONObject; const AKeys: TArray<UnicodeString>): Integer;
 
 implementation
