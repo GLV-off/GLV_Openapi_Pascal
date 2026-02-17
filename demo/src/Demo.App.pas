@@ -104,17 +104,11 @@ const
   SHIFT: string = '  ';
 begin
   WriteLn(SHIFT, APath.Url);
-  WriteLn('method: ', APath.Method.ToHttpStr());
-  WriteLn('headers: <todo-headers>');
-  WriteLn('operationId: ', APath.OperationID);
-  WriteLn('description: ', APath.Description);
-  WriteLn('tags: ', '<todo-tags>');
-
-  //property Headers: THeaders read GetHeaders;
-  //property Parameters: TParameters read GetParameters;
-  //property OperationID: UnicodeString read GetOperationID;
-  //property Description: UnicodeString read GetDescription;
-  //property Tags: TTags read GetTags;
+  WriteLn(SHIFT, 'method: ', APath.Method.ToHttpStr());
+  WriteLn(SHIFT, 'headers: <todo-headers>');
+  WriteLn(SHIFT, 'operationId: ', APath.OperationID);
+  WriteLn(SHIFT, 'description: ', APath.Description);
+  WriteLn(SHIFT, 'tags: ', '<todo-tags>');
 end;
 
 end.
