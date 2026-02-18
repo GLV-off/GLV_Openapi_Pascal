@@ -69,7 +69,7 @@ type
     FJson: TJSONObject;
   strict protected
     function GetItems: TEnumerable<IPath>; override;
-    function GetByUrl(const AUrl: UnicodeString): TArray<IPath>; override;
+    function GetByUrl(const AUrl: UnicodeString): TPathArray; override;
     function GetByIdx(const AIdx: Integer): IPath; override;
     function GetCount: Integer; override;
   public
@@ -263,7 +263,7 @@ begin
   Result := FItems;
 end;
 
-function TJsonPaths.GetByUrl(const AUrl: UnicodeString): TArray<IPath>;
+function TJsonPaths.GetByUrl(const AUrl: UnicodeString): TPathArray;
 begin
   Result := nil;
   SetLength(Result, 0);

@@ -64,16 +64,20 @@ type
   end;
 
   {
+  }
+  TPathArray = TArray<IPath>;
+
+  {
    Path block of Open API specification
   }
   IPaths = interface
     function GetItems: TEnumerable<IPath>;
-    function GetByUrl(const AUrl: UnicodeString): TArray<IPath>;
+    function GetByUrl(const AUrl: UnicodeString): TPathArray;
     function GetByIdx(const AIdx: Integer): IPath;
     function GetCount: Integer;
 
     property Items: TEnumerable<IPath> read GetItems;
-    property ByUrl[const AUrl: UnicodeString]: TArray<IPath> read GetByUrl;
+    property ByUrl[const AUrl: UnicodeString]: TPathArray read GetByUrl;
     property ByIdx[const AIdx: Integer]: IPath  read GetByIdx;
     property Count: Integer read GetCount;
   end;

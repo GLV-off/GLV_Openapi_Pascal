@@ -61,7 +61,7 @@ type
   TBasePaths = class(TInterfacedObject, IPaths)
   strict protected
     function GetItems: TEnumerable<IPath>; virtual; abstract;
-    function GetByUrl(const AUrl: UnicodeString): TArray<IPath>; virtual; abstract;
+    function GetByUrl(const AUrl: UnicodeString): TPathArray; virtual; abstract;
     function GetByIdx(const AIdx: Integer): IPath; virtual; abstract;
     function GetCount: Integer; virtual; abstract;
 
@@ -93,9 +93,7 @@ type
     property Tags: TTags read GetTags;
   end;
 
-  {
-
-  }
+  {}
   TWrapOpenapiDocument = class(TBaseOpenapiDocument)
   strict private
     FOrigin: IOpenapiDocument;
@@ -110,6 +108,7 @@ type
     destructor Destroy; override;
   end;
 
+  { }
   TDefaultOpenapiDocument = class(TBaseOpenapiDocument)
   strict private
     FOpenapi: TOpenapiVersion;
