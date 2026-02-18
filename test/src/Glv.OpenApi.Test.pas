@@ -461,8 +461,12 @@ begin
 end;
 
 procedure TDefaultJsonOpenapiDocumentTest.TestPathsNotNil;
+var
+  p: IPaths;
 begin
-  CheckNotNull(FOpenApi.Paths, 'Объект paths оказался nil!');
+  p := FOpenApi.Paths;
+  CheckNotNull(p, 'Объект paths оказался nil!');
+  P := nil;
 end;
 
 procedure TDefaultJsonOpenapiDocumentTest.TestPaths;
@@ -559,9 +563,13 @@ begin
   { При получении интератора, хотябы раз
     нужно вызвать MoveNext }
   Itr := FJSon.GetEnumerator();
-  Itr.MoveNext();
-  En := Itr.Current;
-  CheckEquals(0, En.KeyNum, 'KeyNum not match!');
+  try
+    Itr.MoveNext();
+    En := Itr.Current;
+    CheckEquals(0, En.KeyNum, 'KeyNum not match!');
+  finally
+    FreeAndNil(Itr);
+  end;
 end;
 
 procedure TPrimitiveTest.TestGetAsString;

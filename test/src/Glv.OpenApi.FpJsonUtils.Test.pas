@@ -18,6 +18,7 @@ type
   TCountOfTest = class(TCrossTestCase)
   public type
     TAssertMethod = procedure(var AJson: TJSONObject) of object;
+
     {}
     procedure RunAssertion(const AMethod: TAssertMethod);
   public

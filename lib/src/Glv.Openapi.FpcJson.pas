@@ -301,6 +301,7 @@ end;
 
 destructor TJsonPaths.Destroy;
 begin
+  FreeAndNil(FItems);
   FreeAndNil(FJson);
   inherited Destroy;
 end;
