@@ -71,6 +71,7 @@ type
     procedure TearDown; override;
   published
     procedure TestCountOfPathsCombinationsMatch;
+    procedure Test_WhenCallingByUrl_ThenWeExpectSomePathObjects;
   end;
 
   TDefaultJsonPathTest = class(TCrossTestCase)
@@ -306,6 +307,15 @@ begin
   CheckEquals(4, FPaths.Count, 'Count of paths not match!');
 end;
 
+procedure TDefaultJsonPathsTest.Test_WhenCallingByUrl_ThenWeExpectSomePathObjects;
+var
+  Items: TPathArray;
+begin
+  Items := FPaths.ByUrl['/help'];
+  CheckEquals(4, Length(Items), 'ByUrl: Items count not match!');
+  SetLength(Items, 0);
+end;
+
 { ==== TDefaultJsonPathTest ================================================= }
 
 procedure TDefaultJsonPathTest.Setup;
@@ -481,7 +491,7 @@ begin
   try
     CheckNotNull(Paths, MSG_NOT_ASSIGNED);
     Items := Paths.ByUrl['/help'];
-    CheckEquals(0, Length(Items), MSG_ITEMS_LEN);
+    CheckEquals(2, Length(Items), MSG_ITEMS_LEN);
   finally
     Paths := nil;
     SetLength(Items, 0);

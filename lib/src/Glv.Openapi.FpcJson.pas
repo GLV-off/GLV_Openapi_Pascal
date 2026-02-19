@@ -14,9 +14,7 @@ uses
   Glv.Openapi.Wrap;
 
 type
-  {
 
-  }
   TJsonOpenapiDocument = class(TBaseOpenapiDocument)
   strict private
     FJson: TJSONObject;
@@ -32,46 +30,42 @@ type
     destructor Destroy; override;
   end;
 
-  {
 
-  }
   TJsonInfo = class(TBaseInfo)
   strict private
     FJson: TJSONObject;
   strict protected
-    function GetTitle: UnicodeString; override;
-    function GetDescription: UnicodeString; override;
-    function GetVersion: UnicodeString; override;
+    function GetTitle: unicodestring; override;
+    function GetDescription: unicodestring; override;
+    function GetVersion: unicodestring; override;
   public
     constructor Create(const AJson: TJSONObject);
     destructor Destroy; override;
   end;
 
-  {
 
-  }
   TJsonServers = class(TBaseServers)
   strict protected
     FJson: TJSONArray;
-    function GetCount: Integer; override;
-    function GetServer(const AIdx: Integer): TOpenapiServer; override;
+    function GetCount: integer; override;
+    function GetServer(const AIdx: integer): TOpenapiServer; override;
   public
     constructor Create(const AJson: TJSONArray); overload;
     constructor Create; overload;
     destructor Destroy; override;
   end;
 
-  {
-  }
+
   TJsonPaths = class(TBasePaths)
   strict private
     FItems: TList<IPath>;
     FJson: TJSONObject;
   strict protected
     function GetItems: TEnumerable<IPath>; override;
-    function GetByUrl(const AUrl: UnicodeString): TPathArray; override;
-    function GetByIdx(const AIdx: Integer): IPath; override;
-    function GetCount: Integer; override;
+    function GetByUrl(const AUrl: unicodestring): TPathArray; override;
+    function GetByIdx(const AIdx: integer): IPath; override;
+    function GetCount: integer; override;
+    procedure Parse;
   public
     constructor Create(const AItems: TList<IPath>; const AJson: TJSONObject); overload;
     constructor Create(const AJson: TJSONObject); overload;
@@ -79,29 +73,24 @@ type
     destructor Destroy; override;
   end;
 
-  {
 
-  }
   TJsonPath = class(TBasePath)
   strict private
-    FUrl: UnicodeString;
+    FUrl: unicodestring;
     FMethod: TOpenApiMethod;
     FJson: TJSONObject;
   strict protected
-    function GetUrl: UnicodeString; override;
+    function GetUrl: unicodestring; override;
     function GetMethod: TOpenApiMethod; override;
     function GetHeaders: THeaders; override;
     function GetParameters: TParameters; override;
-    function GetOperationID: UnicodeString; override;
-    function GetDescription: UnicodeString; override;
+    function GetOperationID: unicodestring; override;
+    function GetDescription: unicodestring; override;
     function GetTags: TTags; override;
   public
-    constructor Create(
-      const AUrl: UnicodeString;
-      const AMethod: TOpenApiMethod;
-      const AJson: TJSONObject); overload;
-    constructor Create(
-      const AUrl: UnicodeString;
+    constructor Create(const AUrl: unicodestring;
+      const AMethod: TOpenApiMethod; const AJson: TJSONObject); overload;
+    constructor Create(const AUrl: unicodestring;
       const AMethod: TOpenApiMethod); overload;
     destructor Destroy; override;
   end;
@@ -114,7 +103,7 @@ uses
   Variants,
   Glv.Openapi.FpJsonFuncs;
 
-{ ==== TJsonOpenapiDocument ================================================= }
+  { ==== TJsonOpenapiDocument ================================================= }
 
 constructor TJsonOpenapiDocument.Create(const AJson: TJSONObject);
 begin
@@ -194,27 +183,46 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TJsonInfo.GetTitle: UnicodeString;
+function TJsonInfo.GetTitle: unicodestring;
 begin
   Result := UTF8Decode(FJson.Get('title', ''));
 end;
 
-function TJsonInfo.GetDescription: UnicodeString;
+function TJsonInfo.GetDescription: unicodestring;
 begin
   Result := UTF8Decode(FJson.Get('description', ''));
 end;
 
-function TJsonInfo.GetVersion: UnicodeString;
+function TJsonInfo.GetVersion: unicodestring;
 begin
   Result := UTF8Decode(FJson.Get('version', ''));
 end;
 
-function TJsonServers.GetCount: Integer;
+{ ==== TJsonServers ========================================================= }
+
+constructor TJsonServers.Create(const AJson: TJSONArray);
+begin
+  inherited Create;
+  FJson := AJson;
+end;
+
+constructor TJsonServers.Create;
+begin
+  Self.Create(TJSONArray.Create());
+end;
+
+destructor TJsonServers.Destroy;
+begin
+  FreeAndNil(FJson);
+  inherited Destroy;
+end;
+
+function TJsonServers.GetCount: integer;
 begin
   Result := FJson.Count;
 end;
 
-function TJsonServers.GetServer(const AIdx: Integer): TOpenapiServer;
+function TJsonServers.GetServer(const AIdx: integer): TOpenapiServer;
 var
   Item: TJSONData;
   Tmp: TJSONString;
@@ -241,44 +249,7 @@ begin
   end;
 end;
 
-constructor TJsonServers.Create(const AJson: TJSONArray);
-begin
-  inherited Create;
-  FJson := AJson;
-end;
-
-constructor TJsonServers.Create;
-begin
-  Self.Create(TJSONArray.Create());
-end;
-
-destructor TJsonServers.Destroy;
-begin
-  FreeAndNil(FJson);
-  inherited Destroy;
-end;
-
-function TJsonPaths.GetItems: TEnumerable<IPath>;
-begin
-  Result := FItems;
-end;
-
-function TJsonPaths.GetByUrl(const AUrl: UnicodeString): TPathArray;
-begin
-  Result := nil;
-  SetLength(Result, 0);
-end;
-
-function TJsonPaths.GetByIdx(const AIdx: Integer): IPath;
-begin
-  Result := TJsonPath.Create('', oamGET);
-end;
-
-function TJsonPaths.GetCount: Integer;
-begin
-  Result := Glv.Openapi.FpJsonFuncs.CountOf(
-    FJSON, TOpenApiMethod.RawStrings());
-end;
+{ =========================================================================== }
 
 constructor TJsonPaths.Create(const AItems: TList<IPath>; const AJson: TJSONObject);
 begin
@@ -292,6 +263,7 @@ begin
   inherited Create;
   FItems := TList<IPath>.Create();
   FJson := AJson;
+  Parse();
 end;
 
 constructor TJsonPaths.Create;
@@ -306,12 +278,124 @@ begin
   inherited Destroy;
 end;
 
+function TJsonPaths.GetItems: TEnumerable<IPath>;
+begin
+  Result := FItems;
+end;
+
+function TJsonPaths.GetByUrl(const AUrl: unicodestring): TPathArray;
+var
+  Count: Integer;
+  K: Integer;
+  I: Integer;
+begin
+  Count := 0;
+  K := 0;
+  Result := [];
+
+  for I := 0 to FItems.Count - 1 do
+  begin
+    if FItems[I].Url = AUrl then
+      Inc(Count);
+  end;
+
+  SetLength(Result, Count);
+  for I := 0 to count - 1 do
+  begin
+    if FItems[I].Url = AUrl then
+    begin
+      Result[K] := FItems[I];
+      Inc(K);
+    end;
+  end;
+end;
+
+function TJsonPaths.GetByIdx(const AIdx: integer): IPath;
+begin
+  Result := TJsonPath.Create('', oamGET);
+end;
+
+function TJsonPaths.GetCount: integer;
+begin
+  Result := Glv.Openapi.FpJsonFuncs.CountOf(FJSON, TOpenApiMethod.RawStrings());
+end;
+
+procedure TJsonPaths.Parse;
+var
+  tmpData: TJSONData;
+  tmpObj: TJSONObject;
+  tmpMethod: TJSONData;
+  tmpPath: IPath;
+  I: Integer;
+  tmpUrl: UnicodeString;
+begin
+  tmpData := nil;
+  for I := 0 to FJson.Count - 1 do
+  begin
+    tmpUrl := UTF8Decode(FJson.Names[I]);
+    if FJson.Find(UTF8Encode(tmpUrl), tmpData) then
+    begin
+      if tmpData.InheritsFrom(TJSONObject) then
+      begin
+        tmpObj := TJSONObject(tmpData);
+        if tmpObj.Find('get', tmpMethod) then
+        begin
+          if tmpMethod.InheritsFrom(TJSONObject) then
+          begin
+            tmpPath := TJsonPath.Create(tmpUrl, oamGET, TJSONObject(tmpMethod.Clone()));
+            FItems.Add(tmpPath);
+          end;
+        end;
+
+        if tmpObj.Find('post', tmpMethod) then
+        begin
+          if tmpMethod.InheritsFrom(TJSONObject) then
+          begin
+            tmpPath := TJsonPath.Create(tmpUrl, oamPOST, TJSONObject(tmpMethod.Clone()));
+            FItems.Add(tmpPath);
+
+          end;
+        end;
+
+        if tmpObj.FInd('delete', tmpMethod) then
+        begin
+          if tmpMethod.InheritsFrom(TJSONObject) then
+          begin
+            tmpPath := TJsonPath.Create(tmpUrl, oamDELETE, TJSONObject(tmpMethod.Clone()));
+            FItems.Add(tmpPath);
+          end;
+        end;
+
+        if tmpObj.Find('put', tmpMethod) then
+        begin
+          if tmpMethod.InheritsFrom(TJSONObject) then
+          begin
+            tmpPath := TJsonPath.Create(tmpUrl, oamPUT, TJSONObject(tmpMethod.Clone()));
+            FItems.Add(tmpPath);
+          end;
+        end;
+
+        if tmpObj.Find('head', tmpMethod) then
+        begin
+          if tmpMethod.InheritsFrom(TJSONObject) then
+          begin
+            tmpPath := TJsonPath.Create(tmpUrl, oamHEAD, TJSONObject(tmpMethod.Clone()));
+            FItems.Add(tmpPath);
+          end;
+        end;
+      end;
+    end
+    else
+    begin
+
+    end;
+  end;
+end;
+
 { ==== TJsonPath ============================================================ }
 
-constructor TJsonPath.Create(
-  const AUrl: UnicodeString;
-  const AMethod: TOpenApiMethod;
-  const AJson: TJSONObject);
+constructor TJsonPath.Create(const AUrl: unicodestring;
+  const AMethod: TOpenApiMethod; const AJson: TJSONObject);
 begin
   inherited Create;
   FUrl := AUrl;
@@ -319,8 +403,7 @@ begin
   FJson := AJson;
 end;
 
-constructor TJsonPath.Create(
-  const AUrl: UnicodeString;
+constructor TJsonPath.Create(const AUrl: unicodestring;
   const AMethod: TOpenApiMethod);
 begin
   Self.Create(AUrl, AMethod, TJSONObject.Create());
@@ -335,7 +418,7 @@ end;
 
 { --------------------------------------------------------------------------- }
 
-function TJsonPath.GetUrl: UnicodeString;
+function TJsonPath.GetUrl: unicodestring;
 begin
   Result := FUrl;
 end;
@@ -355,7 +438,7 @@ begin
   Result := TParameters.Create();
 end;
 
-function TJsonPath.GetOperationID: UnicodeString;
+function TJsonPath.GetOperationID: unicodestring;
 var
   Tmp: TJSONString;
 begin
@@ -365,7 +448,7 @@ begin
     Result := '';
 end;
 
-function TJsonPath.GetDescription: UnicodeString;
+function TJsonPath.GetDescription: unicodestring;
 var
   Tmp: TJSONString;
 begin
@@ -381,11 +464,11 @@ var
   Tmp: TJSONArray;
   TmpItem: TJSONData;
   TmpStr: TJSONString;
-  I: Integer;
+  I: integer;
 begin
-{$IFDEF FPC}
+  {$IFDEF FPC}
   Result := [];
-{$ENDIF FPC}
+  {$ENDIF FPC}
   if FJson.Find('tags', Tmp) then
   begin
     SetLength(Result, Tmp.Count);
@@ -406,4 +489,3 @@ end;
 { =========================================================================== }
 
 end.
-
