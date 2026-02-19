@@ -16,6 +16,7 @@ type
   IServers = Glv.Openapi.Ifaces.IServers;
   IPaths = Glv.Openapi.Ifaces.IPaths;
   IPath = Glv.Openapi.Ifaces.IPath;
+  TPathArray = Glv.Openapi.Ifaces.TPathArray;
 
 {
 
@@ -23,7 +24,6 @@ type
 function LoadJsonFromFile(const AFilepath: UnicodeString): IOpenapiDocument;
 
 function LoadJsonFromStream(const AStream: TStream): IOpenapiDocument;
-
 implementation
 
 uses
