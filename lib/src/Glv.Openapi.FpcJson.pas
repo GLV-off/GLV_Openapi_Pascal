@@ -256,6 +256,7 @@ begin
   inherited Create;
   FItems := AItems;
   FJson := AJson;
+  Parse();
 end;
 
 constructor TJsonPaths.Create(const AJson: TJSONObject);
@@ -288,6 +289,8 @@ var
   Count: Integer;
   K: Integer;
   I: Integer;
+  Path: IPath;
+  tmpUrl: UnicodeString;
 begin
   Count := 0;
   K := 0;
@@ -295,7 +298,9 @@ begin
 
   for I := 0 to FItems.Count - 1 do
   begin
-    if FItems[I].Url = AUrl then
+    Path :=FItems[I];
+    tmpUrl := Path.Url;
+    if Path.Url = AUrl then
       Inc(Count);
   end;
 
