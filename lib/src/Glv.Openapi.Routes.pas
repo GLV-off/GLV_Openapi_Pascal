@@ -86,7 +86,11 @@ implementation
 
 function TOpenApiMethodHelper.ToHttpStr: UnicodeString;
 begin
+{$IFDEF FPC}
   Result := UTF8Decode(GetEnumName(TypeInfo(Self), Ord(Self)));
+{$ELSE FPC}
+  Result := GetEnumName(TypeInfo(TOpenApiMethod), Ord(Self));
+{$ENDIF FPC}
   Result := Copy(Result, 4);
   Result := LowerCase(Result);
 end;
