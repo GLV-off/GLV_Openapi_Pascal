@@ -29,6 +29,16 @@ function CreateFakeJsonPath: TJSONObject;
 
 function CreateFakeTags: TJSONArray;
 
+{
+ JSON Примитивами
+}
+
+function NewObj: TJSONData; overload;
+function NewObj(const AKey: UnicodeString;
+                const AValue: TJSONData): TJSONData; overload;
+function NewStr(const AValue: UnicodeString): TJSONData; overload;
+function NewArr: TJSONData; overload;
+
 implementation
 
 uses
@@ -36,6 +46,31 @@ uses
   Classes,
   JsonParser,
   Test.Env;
+
+function NewObj: TJSONData;
+begin
+  Result := TJSONObject.Create();
+end;
+
+function NewObj(const AKey: UnicodeString;
+                const AValue: TJSONData): TJSONData;
+var
+  Obj: TJSONObject;
+begin
+  Obj := TJSONObject.Create();
+  Obj.Add(AKey, AValue);
+  Result := Obj;
+end;
+
+function NewStr(const AValue: UnicodeString): TJSONData;
+begin
+  Result := TJSONString.Create(AValue);
+end;
+
+function NewArr: TJSONData;
+begin
+  Result := TJSONArray.Create();
+end;
 
 function GetFakeJsonSpec: TJSONObject;
 
@@ -112,6 +147,40 @@ function CreateFakeJsonPaths: TJSONObject;
 var
   LocalObj: TJSONObject;
 begin
+  {
+  Result := TJSONObject.Create;
+  Result.Add('operationId', 'getHelp');
+  Result.Add('description', 'fake_description');
+  Result.Add('tags', CreateFakeTags());
+
+  Result := TJSONArray.Create;
+  Result.Add('help');
+
+
+  Object('/help'
+    Object('get',
+      Object([
+        Pair('operationId', 'getHelp'),
+        Pair('description', 'getHelp'),
+        Pair('tags', NewArray([NewStr('help')]))
+      ])
+    ),
+    Object('get',
+      Object([
+        Pair('operationId', 'getHelp'),
+        Pair('description', 'getHelp'),
+        Pair('tags', NewArray([NewStr('help')]))
+      ])
+    ),
+    Object('get',
+      Object([
+        Pair('operationId', 'getHelp'),
+        Pair('description', 'getHelp'),
+        Pair('tags', NewArray([NewStr('help')]))
+      ])
+    ),
+  )
+  }
   Result := TJSONObject.Create;
   LocalObj := TJSONObject.Create();
   LocalObj.Add('get', CreateFakeJsonPath());
@@ -123,7 +192,7 @@ end;
 
 function CreateFakeJsonPath: TJSONObject;
 begin
-  Result := TJSONObject.Create;
+  Result := TJSONObject.Create();
   Result.Add('operationId', 'getHelp');
   Result.Add('description', 'fake_description');
   Result.Add('tags', CreateFakeTags());

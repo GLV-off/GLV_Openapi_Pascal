@@ -55,6 +55,14 @@
         <Filename Value="..\..\src\Glv.Openapi.FpJsonFuncs.pas"/>
         <UnitName Value="Glv.Openapi.FpJsonFuncs"/>
       </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Json.pas"/>
+        <UnitName Value="Glv.Json"/>
+      </Item>
+      <Item>
+        <Filename Value="..\..\src\Glv.Json.Shared.pas"/>
+        <UnitName Value="Glv.Json.Shared"/>
+      </Item>
     </Files>
     <RequiredPkgs>
       <Item>

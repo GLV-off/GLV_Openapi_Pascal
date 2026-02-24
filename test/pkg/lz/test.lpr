@@ -3,19 +3,12 @@
 {$I 'glv_openapi_test.inc'}
 
 uses
-{$IFDEF WINDOWS}
-  Windows,
-{$ENDIF WINDOWS}
   Glv.Testing.App,
   Glv.OpenApi.Test,
   Glv.OpenApi.FpJsonUtils.Test,
   Test.Env,
-  Test.Fakes;
+  Test.Fakes, Glv.Json.Test;
 begin
-{$IFDEF WINDOWS}
-  SetConsoleCP(CP_UTF8);
-  SetConsoleOutputCP(CP_UTF8);
-{$ENDIF WINDOWS}
   Glv.Testing.App.Run('Tests for GLV Openapi Library');
 {$IFDEF DEBUG}
   ReadLn;
