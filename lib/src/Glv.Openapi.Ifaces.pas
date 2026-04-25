@@ -18,6 +18,9 @@ type
   IComponents = interface;
   ITags = interface;
 
+  {
+   Open API root document object
+  }
   IOpenapiDocument = interface
     function GetOpenapi: TOpenapiVersion;
     function GetInfo: IInfo;
@@ -32,6 +35,9 @@ type
     property Components: IComponents read GetComponents;
   end;
 
+  {
+   Open API Information section
+  }
   IInfo = interface
     function GetTitle: UnicodeString;
     function GetDescription: UnicodeString;
@@ -68,7 +74,7 @@ type
   TPathArray = TArray<IPath>;
 
   {
-   Path block of Open API specification
+   Open API Paths block
   }
   IPaths = interface
     function GetItems: TEnumerable<IPath>;
@@ -103,6 +109,9 @@ type
       read GetTag;
   end;
 
+  {
+   Schema components in specification
+  }
   IComponents = interface
   end;
 
