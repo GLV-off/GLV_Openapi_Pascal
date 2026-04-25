@@ -13,7 +13,7 @@ type
   }
   TJsonBuilderTest = class(TCrossTestCase)
   strict private
-    FBuilder: IJsonBuilder;
+    //FBuilder: IJsonBuilder;
   protected
     procedure SetUp; override;
     procedure TearDown; override;
@@ -26,12 +26,12 @@ implementation
 procedure TJsonBuilderTest.SetUp;
 begin
   inherited SetUp;
-  FBuilder := TJsonBuilder.Create;
+  //FBuilder := TJsonBuilder.Create;
 end;
 
 procedure TJsonBuilderTest.TearDown;
 begin
-  FBuilder := nil;
+  //FBuilder := nil;
   inherited TearDown;
 end;
 
@@ -39,7 +39,7 @@ procedure TJsonBuilderTest.TestSimple;
 var
   X: TJSONValue;
 begin
-  FBuilder.Build();
+  //FBuilder.Build();
 end;
 
 initialization

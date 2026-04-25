@@ -127,7 +127,6 @@ type
     procedure TestGetAsString;
     procedure TestDeleteAsString;
     procedure TestPutAsString;
-
     procedure TestRawStrings;
   end;
 
